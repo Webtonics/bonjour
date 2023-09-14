@@ -1,4 +1,5 @@
 import 'package:bonjour/utils/colors.dart';
+import 'package:bonjour/views/auth/login.dart';
 import 'package:flutter/material.dart';
 
 class InitialPage extends StatelessWidget {
@@ -6,8 +7,6 @@ class InitialPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: webBackgroundColor,
-    );
+    return const LoginScreen();
   }
 }

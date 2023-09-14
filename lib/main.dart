@@ -1,6 +1,7 @@
 import 'package:bonjour/responsive/mobilescreen_layout.dart';
 import 'package:bonjour/responsive/responsive_layout.dart';
 import 'package:bonjour/responsive/webscreen_layout.dart';
+import 'package:bonjour/views/auth/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -24,10 +25,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData.dark(),
-      home: const ResponsiveLayout(
-        webScreenLayout: WebScreenLayout(),
-        mobileScreenLayout: MobileScreenLayout(),
-      ),
+      // home: const ResponsiveLayout(
+      //   webScreenLayout: WebScreenLayout(),
+      //   mobileScreenLayout: MobileScreenLayout(),
+      // ),
+      home: const LoginScreen(),
     );
   }
 }
