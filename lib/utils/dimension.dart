@@ -1,0 +1,1 @@
+var webScreenSize = 600;

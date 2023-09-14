@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "559500029309",
+    "project_id": "bonjour-fae43",
+    "storage_bucket": "bonjour-fae43.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:559500029309:android:a88502f4e4c2a48e98f014",
+        "android_client_info": {
+          "package_name": "com.example.bonjour"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6csL3pa1I_mRxSD6dk4yN_TqyItvaBw8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
