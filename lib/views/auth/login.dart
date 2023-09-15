@@ -16,13 +16,13 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  TextEditingController _userNameController = TextEditingController();
+
   late bool _obsecure;
   @override
   void initState() {
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
-    _userNameController = TextEditingController();
+
     _obsecure = true;
     super.initState();
   }
@@ -31,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _userNameController.dispose();
+
     super.dispose();
   }
 
@@ -69,15 +69,15 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(
               height: 60,
             ),
-            //username field
             MyTextField(
-              controller: _userNameController,
+              controller: _emailController,
               label: "Email address",
               keyboardtype: TextInputType.emailAddress,
               hint: 'example@gmail.com',
               obscure: false,
             ),
             spacing,
+
             // password field
             MyTextField(
                 icon: _obsecure ? Icons.visibility : Icons.visibility_off,
@@ -94,10 +94,10 @@ class _LoginScreenState extends State<LoginScreen> {
             spacing,
             // button
             MyButton(
-                title: "Signup",
+                title: "Signin",
                 action: () {
                   print(
-                      "${_userNameController.text}, ${_emailController.text}, ${_passwordController.text}");
+                      " ${_emailController.text}, ${_passwordController.text}");
                 }),
             spacing,
             Flexible(
@@ -127,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         builder: (context) => const RegisterScreen())),
                     child: Container(
                       child: const Text(
-                        "Sign Up",
+                        "Signup",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,

@@ -1,3 +1,4 @@
+import 'package:bonjour/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class MyButton extends StatelessWidget {
@@ -10,7 +11,7 @@ class MyButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: action,
       style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
+          backgroundColor: blueColor,
           minimumSize: const Size(double.infinity, 60),
           maximumSize: const Size(double.infinity, 70)),
       child: Text(title),
