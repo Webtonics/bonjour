@@ -1,12 +1,15 @@
 import 'package:bonjour/resources/authentication/auth_method.dart';
 import 'package:bonjour/utils/colors.dart';
 import 'package:bonjour/utils/constants/spacer.dart';
+import 'package:bonjour/utils/uploader/image.dart';
 import 'package:bonjour/views/auth/login.dart';
 import 'package:bonjour/views/auth/register.dart';
 import 'package:bonjour/widget/button.dart';
 import 'package:bonjour/widget/textfield.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -21,6 +24,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController _bioController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   late bool _obsecure;
+  Uint8List? image;
   @override
   void initState() {
     _userNameController = TextEditingController();
@@ -42,6 +46,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   viewPass() {
     _obsecure = false;
+  }
+
+  selectImage() async {
+    Uint8List In = await pickimage(ImageSource.gallery);
+    setState(() {
+      image = In;
+    });
   }
 
   @override
@@ -74,17 +85,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
             //circular widget to accept and show selected file
             Stack(
               children: [
-                const CircleAvatar(
-                  radius: 64,
-                  backgroundImage: NetworkImage(
-                      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"),
-                ),
+                image != null
+                    ? CircleAvatar(
+                        radius: 64, backgroundImage: MemoryImage(image!))
+                    : const CircleAvatar(
+                        radius: 64,
+                        backgroundImage: NetworkImage(
+                            "https://www.nicepng.com/png/detail/933-9332131_profile-picture-default-png.png"),
+                      ),
                 Positioned(
                   bottom: -10,
                   left: 80,
                   // right: 10,
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: selectImage,
                     icon: const Icon(Icons.add_a_photo),
                     color: Colors.white70,
                   ),
@@ -152,6 +166,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       password: _passwordController.text,
                       email: _emailController.text,
                       bio: _bioController.text,
+                      file: image!,
                     );
                     print(res);
                   }),
