@@ -2,9 +2,7 @@ import 'dart:typed_data';
 
 import 'package:bonjour/resources/authentication/auth_exception.dart';
 import 'package:bonjour/resources/storage/storage_method.dart';
-import 'package:bonjour/widget/alert_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthMethods {
@@ -44,7 +42,7 @@ class AuthMethods {
           'following': [],
           'profile_pic': photoUrl,
         });
-        res = 'success';
+        res = 'Success';
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
@@ -60,5 +58,46 @@ class AuthMethods {
       res = err.toString();
     }
     return res;
+  }
+
+  //login user
+  Future<String> signInUser(String email, String password) async {
+    String result = "Some error occured";
+    try {
+      if (email.isNotEmpty || password.isNotEmpty) {
+        await _auth.signInWithEmailAndPassword(
+            email: email, password: password);
+        result = "Success";
+      } else {
+        result = "Please fill all the field";
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        throw UserNotFoundAuthException;
+      } else if (e.code == 'wrong-password') {
+        throw WrongPasswordAuthException;
+      }
+    } catch (e) {
+      result = e.toString();
+    }
+    return result;
+  }
+
+  //get Current user ID
+  Future<String?> getUser() async {
+    String userID = await _auth.currentUser!.uid;
+    return userID;
+    // return _auth.currentUser?.uid;
+  }
+
+  getUseriD() {
+    String userID = _auth.currentUser!.uid;
+    return userID;
+    // return _auth.currentUser?.uid;
+  }
+
+  //Logout user
+  Future<void> logOutUser() async {
+    await _auth.signOut();
   }
 }

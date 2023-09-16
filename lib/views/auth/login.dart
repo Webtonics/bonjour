@@ -1,10 +1,18 @@
+import 'package:bonjour/resources/authentication/auth_exception.dart';
+import 'package:bonjour/resources/authentication/auth_method.dart';
 import 'package:bonjour/utils/colors.dart';
 import 'package:bonjour/utils/constants/spacer.dart';
+import 'package:bonjour/utils/snackbar.dart';
 import 'package:bonjour/views/auth/register.dart';
+import 'package:bonjour/widget/alert_dialog.dart';
 import 'package:bonjour/widget/button.dart';
 import 'package:bonjour/widget/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../responsive/mobilescreen_layout.dart';
+import '../../responsive/responsive_layout.dart';
+import '../../responsive/webscreen_layout.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -37,6 +45,37 @@ class _LoginScreenState extends State<LoginScreen> {
 
   viewPass() {
     _obsecure = false;
+  }
+
+  void signUserIn() async {
+    try {
+      String result = await AuthMethods()
+          .signInUser(_emailController.text, _passwordController.text);
+
+      if (result == "Success") {
+        // ignore: use_build_context_synchronously
+        showSnackBar(result, context);
+        // ignore: use_build_context_synchronously
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const ResponsiveLayout(
+              webScreenLayout: WebScreenLayout(),
+              mobileScreenLayout: MobileScreenLayout(),
+            ),
+          ),
+        );
+      } else {
+        showSnackBar(result, context);
+      }
+      // Navigator.of(context).pop();
+    } on WrongPasswordAuthException {
+      showalertDialog(context, 'The Password you provided is Incorrect');
+    } on UserNotFoundAuthException {
+      showalertDialog(
+          context, 'The Account you are trying to login does not Exist');
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override
@@ -94,11 +133,9 @@ class _LoginScreenState extends State<LoginScreen> {
             spacing,
             // button
             MyButton(
-                title: "Signin",
-                action: () {
-                  print(
-                      " ${_emailController.text}, ${_passwordController.text}");
-                }),
+              title: "Signin",
+              action: signUserIn,
+            ),
             spacing,
             Flexible(
               flex: 2,

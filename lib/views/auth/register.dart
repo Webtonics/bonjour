@@ -5,7 +5,6 @@ import 'package:bonjour/utils/constants/spacer.dart';
 import 'package:bonjour/utils/snackbar.dart';
 import 'package:bonjour/utils/uploader/image.dart';
 import 'package:bonjour/views/auth/login.dart';
-import 'package:bonjour/views/auth/register.dart';
 import 'package:bonjour/widget/alert_dialog.dart';
 import 'package:bonjour/widget/button.dart';
 import 'package:bonjour/widget/textfield.dart';
@@ -13,6 +12,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../responsive/mobilescreen_layout.dart';
+import '../../responsive/responsive_layout.dart';
+import '../../responsive/webscreen_layout.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -81,6 +84,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       if (res != 'Success') {
         showSnackBar(res, context);
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const ResponsiveLayout(
+              webScreenLayout: WebScreenLayout(),
+              mobileScreenLayout: MobileScreenLayout(),
+            ),
+          ),
+        );
       } else {
         showSnackBar("Success", context);
       }

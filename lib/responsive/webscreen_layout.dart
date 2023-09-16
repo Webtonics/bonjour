@@ -17,7 +17,9 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
   Widget build(BuildContext context) {
     return const Scaffold(
       backgroundColor: webBackgroundColor,
-      body: LoginScreen(),
+      body: Center(
+        child: Text("Web Scrren"),
+      ),
     );
   }
 }

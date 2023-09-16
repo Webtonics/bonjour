@@ -15,7 +15,9 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
   Widget build(BuildContext context) {
     return const Scaffold(
       backgroundColor: mobileBackgroundColor,
-      body: LoginScreen(),
+      body: Center(
+        child: Text("Mobile Scrren"),
+      ),
     );
   }
 }
