@@ -90,8 +90,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         radius: 64, backgroundImage: MemoryImage(image!))
                     : const CircleAvatar(
                         radius: 64,
-                        backgroundImage: NetworkImage(
-                            "https://www.nicepng.com/png/detail/933-9332131_profile-picture-default-png.png"),
+                        backgroundImage:
+                            // AssetImage("assets/images/defaultprofile.png"),
+
+                            NetworkImage(
+                                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwCcIy04iv-r0Ob5ssiVyTRs8X9qLsLHEOJ78MYiZUMD3mFJBrxFRX&s=0"),
                       ),
                 Positioned(
                   bottom: -10,

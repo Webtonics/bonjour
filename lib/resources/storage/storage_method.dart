@@ -8,14 +8,6 @@ class StorageMethods {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<String> getuserid() async {
-    if (_auth.currentUser != null) {
-      return _auth.currentUser!.uid;
-    } else {
-      throw UserNotFoundAuthException();
-    }
-  }
-
   //add image to firebase storage
   Future<String> uploadImageToStorage(
       String childName, bool isPost, Uint8List profilePicture) async {
