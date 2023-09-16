@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:bonjour/resources/authentication/auth_exception.dart';
 import 'package:bonjour/resources/storage/storage_method.dart';
+import 'package:bonjour/widget/alert_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -45,16 +46,16 @@ class AuthMethods {
         });
         res = 'success';
       }
-    } on EmailAlreadyinUseAuthException {
-      print("Email Already Exist");
-    } on WeakPasswordAuthException {
-      print("WeakPassword");
-    } on InvalidEmailAuthException {
-      print("Invalid Password");
-    } on MissingPasswordAuthException {
-      print("Missing password");
-    } on GenericAuthException {
-      print("Unkown Error Occurred");
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-email') {
+        throw InvalidEmailAuthException();
+      } else if (e.code == 'weak-password') {
+        throw WeakPasswordAuthException();
+      } else if (e.code == 'email-already-in-use') {
+        throw EmailAlreadyinUseAuthException();
+      } else if (e.code == 'missing-password') {
+        throw MissingPasswordAuthException();
+      }
     } catch (err) {
       res = err.toString();
     }

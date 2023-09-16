@@ -1,9 +1,12 @@
+import 'package:bonjour/resources/authentication/auth_exception.dart';
 import 'package:bonjour/resources/authentication/auth_method.dart';
 import 'package:bonjour/utils/colors.dart';
 import 'package:bonjour/utils/constants/spacer.dart';
+import 'package:bonjour/utils/snackbar.dart';
 import 'package:bonjour/utils/uploader/image.dart';
 import 'package:bonjour/views/auth/login.dart';
 import 'package:bonjour/views/auth/register.dart';
+import 'package:bonjour/widget/alert_dialog.dart';
 import 'package:bonjour/widget/button.dart';
 import 'package:bonjour/widget/textfield.dart';
 import 'package:flutter/foundation.dart';
@@ -25,6 +28,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController _passwordController = TextEditingController();
   late bool _obsecure;
   Uint8List? image;
+  bool isloading = false;
   @override
   void initState() {
     _userNameController = TextEditingController();
@@ -32,6 +36,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _bioController = TextEditingController();
     _passwordController = TextEditingController();
     _obsecure = true;
+    isloading = false;
     super.initState();
   }
 
@@ -53,6 +58,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() {
       image = In;
     });
+  }
+
+  loading() {
+    setState(() {
+      isloading = true;
+    });
+  }
+
+  signUpUser() async {
+    try {
+      String res = await AuthMethods().signupUser(
+        username: _userNameController.text,
+        password: _passwordController.text,
+        email: _emailController.text,
+        bio: _bioController.text,
+        file: image!,
+      );
+      print(res);
+
+      loading();
+
+      if (res != 'Success') {
+        showSnackBar(res, context);
+      } else {
+        showSnackBar("Success", context);
+      }
+    } on WeakPasswordAuthException {
+      showalertDialog(
+          context, "The password you entered has to be at least 6 characters");
+    } on InvalidEmailAuthException {
+      showalertDialog(context, "The Email you provided is Incorrect");
+    } on MissingPasswordAuthException {
+      showalertDialog(context, "The password cannot be null");
+    } on EmailAlreadyinUseAuthException {
+      showalertDialog(context, "This Email is already in Use");
+    }
   }
 
   @override
@@ -161,18 +202,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
             // button
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: MyButton(
-                  title: "Signup",
-                  action: () async {
-                    String res = await AuthMethods().signupUser(
-                      username: _userNameController.text,
-                      password: _passwordController.text,
-                      email: _emailController.text,
-                      bio: _bioController.text,
-                      file: image!,
-                    );
-                    print(res);
-                  }),
+              child: isloading
+                  ? ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          minimumSize: const Size(double.infinity, 60),
+                          maximumSize: const Size(double.infinity, 70)),
+                      child: const CircularProgressIndicator(),
+                    )
+                  : MyButton(title: "Signup", action: signUpUser),
             ),
             spacing,
             Flexible(

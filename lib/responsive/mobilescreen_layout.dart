@@ -1,6 +1,8 @@
 import 'package:bonjour/utils/colors.dart';
 import 'package:flutter/material.dart';
 
+import '../views/auth/login.dart';
+
 class MobileScreenLayout extends StatefulWidget {
   const MobileScreenLayout({super.key});
 
@@ -13,9 +15,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
   Widget build(BuildContext context) {
     return const Scaffold(
       backgroundColor: mobileBackgroundColor,
-      body: Center(
-        child: Text("Mobile view"),
-      ),
+      body: LoginScreen(),
     );
   }
 }

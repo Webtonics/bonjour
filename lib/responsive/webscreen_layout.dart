@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
+import '../views/auth/login.dart';
+
 class WebScreenLayout extends StatefulWidget {
   const WebScreenLayout({super.key});
 
@@ -15,7 +17,7 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
   Widget build(BuildContext context) {
     return const Scaffold(
       backgroundColor: webBackgroundColor,
-      body: Center(child: Text("Web View")),
+      body: LoginScreen(),
     );
   }
 }
