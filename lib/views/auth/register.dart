@@ -71,20 +71,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   signUpUser() async {
     try {
-      String res = await AuthMethods().signupUser(
+      String result = await AuthMethods().signupUser(
         username: _userNameController.text,
         password: _passwordController.text,
         email: _emailController.text,
         bio: _bioController.text,
         file: image!,
       );
-      print(res);
+      print(result);
 
       loading();
 
-      if (res != 'Success') {
-        showSnackBar(res, context);
-        Navigator.of(context).push(
+      if (result == 'Success') {
+        // ignore: use_build_context_synchronously
+        showSnackBar(result, context);
+        // ignore: use_build_context_synchronously
+        Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => const ResponsiveLayout(
               webScreenLayout: WebScreenLayout(),
@@ -93,7 +95,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         );
       } else {
-        showSnackBar("Success", context);
+        // ignore: use_build_context_synchronously
+        showSnackBar("An error occured", context);
       }
     } on WeakPasswordAuthException {
       showalertDialog(

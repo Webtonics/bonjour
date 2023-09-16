@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:bonjour/models/user.dart' as model;
 import 'package:bonjour/resources/authentication/auth_exception.dart';
 import 'package:bonjour/resources/storage/storage_method.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,6 +11,8 @@ class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   // step 3 create instance of firestore
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  //instatiate our model class
 
   //step 2: function to sign up the user
   Future<String> signupUser(
@@ -32,16 +35,20 @@ class AuthMethods {
 
         String photoUrl = await StorageMethods()
             .uploadImageToStorage("profilePics", false, file);
+
+        model.User user = model.User(
+            username: username,
+            email: email,
+            uid: cred.user!.uid,
+            photoUrl: photoUrl,
+            bio: bio,
+            followers: [],
+            following: []);
         //add user to db
-        await _firestore.collection('users').doc(cred.user!.uid).set({
-          'username': username,
-          'uid': cred.user!.uid,
-          'email': email,
-          'bio': bio,
-          'followers': [],
-          'following': [],
-          'profile_pic': photoUrl,
-        });
+        await _firestore
+            .collection('users')
+            .doc(cred.user!.uid)
+            .set(user.toJson());
         res = 'Success';
       }
     } on FirebaseAuthException catch (e) {
