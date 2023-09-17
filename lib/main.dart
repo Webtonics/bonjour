@@ -1,13 +1,13 @@
-import 'package:bonjour/resources/authentication/auth_method.dart';
+import 'package:bonjour/providers/user_provider.dart';
 import 'package:bonjour/responsive/mobilescreen_layout.dart';
 import 'package:bonjour/responsive/responsive_layout.dart';
 import 'package:bonjour/responsive/webscreen_layout.dart';
 import 'package:bonjour/utils/colors.dart';
 import 'package:bonjour/views/auth/login.dart';
-import 'package:bonjour/views/success.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 
@@ -25,68 +25,41 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: mobileBackgroundColor,
-      ),
-      // home:
-
-      //Stream builder to track user state
-      home: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.active) {
-            if (snapshot.hasData) {
-              return const ResponsiveLayout(
-                webScreenLayout: WebScreenLayout(),
-                mobileScreenLayout: MobileScreenLayout(),
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text("${snapshot.error}"),
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => UserProvider())],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData.dark().copyWith(
+          scaffoldBackgroundColor: mobileBackgroundColor,
+        ),
+        //Stream builder to track user state
+        home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.active) {
+              if (snapshot.hasData) {
+                return const ResponsiveLayout(
+                  webScreenLayout: WebScreenLayout(),
+                  mobileScreenLayout: MobileScreenLayout(),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text("${snapshot.error}"),
+                );
+              }
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: primaryColor,
+                ),
               );
             }
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: primaryColor,
-              ),
-            );
-          }
-          return const LoginScreen();
-        },
+            return const LoginScreen();
+          },
+        ),
       ),
     );
   }
 }
-
-//Checking state from firebase auth
-
-// IdtokenChanges
-//Userchanges for change in auth info e.g display name
-//authStatechanges only when user sign in or sign out
-
-// class TestRoute extends StatefulWidget {
-//   const TestRoute({super.key});
-
-//   @override
-//   State<TestRoute> createState() => _TestRouteState();
-// }
-
-// class _TestRouteState extends State<TestRoute> {
-//   String auth = FirebaseAuth.instance.currentUser!.uid;
-//   @override
-//   Widget build(BuildContext context) {
-//     // to check authenticaton state
-
-//     print(auth);
-//     if (auth null) {
-//       return const SuccessPage();
-//     } else {
-//       return const LoginScreen();
-//     }
-//   }
-// }

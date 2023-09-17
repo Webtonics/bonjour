@@ -14,6 +14,19 @@ class AuthMethods {
 
   //instatiate our model class
 
+  //Get current user
+  Future<model.User> getDetails() async {
+    User currentuser = _auth.currentUser!;
+
+    /// to get the currnt users uid
+    DocumentSnapshot documentSnapshot = await _firestore
+        .collection('users')
+        .doc(currentuser.uid)
+        .get(); // to see details of the current user
+
+    return model.User.fromSnap(documentSnapshot);
+  }
+
   //step 2: function to sign up the user
   Future<String> signupUser(
       {required String username,
@@ -91,17 +104,17 @@ class AuthMethods {
   }
 
   //get Current user ID
-  Future<String?> getUser() async {
-    String userID = await _auth.currentUser!.uid;
-    return userID;
-    // return _auth.currentUser?.uid;
-  }
+  // Future<String?> getUser() async {
+  //   String userID = await _auth.currentUser!.uid;
+  //   return userID;
+  //   // return _auth.currentUser?.uid;
+  // }
 
-  getUseriD() {
-    String userID = _auth.currentUser!.uid;
-    return userID;
-    // return _auth.currentUser?.uid;
-  }
+  // getUseriD() {
+  //   String userID = _auth.currentUser!.uid;
+  //   return userID;
+  //   // return _auth.currentUser?.uid;
+  // }
 
   //Logout user
   Future<void> logOutUser() async {
