@@ -2,6 +2,9 @@ import 'package:bonjour/models/user.dart' as model;
 import 'package:bonjour/providers/user_provider.dart';
 import 'package:bonjour/resources/authentication/auth_method.dart';
 import 'package:bonjour/utils/colors.dart';
+import 'package:bonjour/views/profile.dart';
+import 'package:bonjour/views/success.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,36 +16,104 @@ class MobileScreenLayout extends StatefulWidget {
 }
 
 class _MobileScreenLayoutState extends State<MobileScreenLayout> {
+  int currentPage = 0;
+  late PageController pageController;
+
+  @override
+  void initState() {
+    pageController = PageController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
+
+  void navigationTapped(int page) {
+    pageController.jumpToPage(page);
+  }
+
+  void onpageChange(int page) {
+    page = currentPage;
+  }
+
   @override
   Widget build(BuildContext context) {
     model.User user = Provider.of<UserProvider>(context).getUser;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Mobile"),
-      ),
       backgroundColor: mobileBackgroundColor,
-      body: Center(
-        child: Column(
-          children: [
-            Text(user.email),
-          ],
-        ),
+      // body: pages[currentPage],
+      body: PageView(
+        controller: pageController,
+        onPageChanged: (value) {
+          setState(() {
+            currentPage = value;
+          });
+        },
+        physics: const NeverScrollableScrollPhysics(),
+        children: const [
+          Center(
+            child: Text("Feed"),
+          ),
+          Center(
+            child: Text("Search"),
+          ),
+          Center(
+            child: Text("Upload"),
+          ),
+          Center(
+            child: Text("Favorites"),
+          ),
+          Center(
+            child: Text("profile"),
+          ),
+        ],
+      ),
+
+      bottomNavigationBar: CupertinoTabBar(
+        iconSize: 25,
+        currentIndex: currentPage,
+
+        backgroundColor: mobileBackgroundColor,
+        // inactiveColor: secondaryColor,
+        // activeColor: primaryColor,
+
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+                color: currentPage == 0 ? primaryColor : secondaryColor,
+              ),
+              label: ""),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.search,
+                color: currentPage == 1 ? primaryColor : secondaryColor,
+              ),
+              label: ""),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.add_box_outlined,
+                color: currentPage == 2 ? primaryColor : secondaryColor,
+              ),
+              label: ""),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.favorite,
+                color: currentPage == 3 ? primaryColor : secondaryColor,
+              ),
+              label: ""),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.person,
+                color: currentPage == 4 ? primaryColor : secondaryColor,
+              ),
+              label: ""),
+        ],
+        onTap: navigationTapped,
       ),
     );
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: const Text("Mobile"),
-    //     actions: [
-    //       IconButton(
-    //           onPressed: () {
-    //             AuthMethods().logOutUser();
-    //           },
-    //           icon: const Icon(Icons.abc))
-    //     ],
-    //   ),
-    //   body: const Center(
-    //     child: Text("Hello"),
-    //   ),
-    // );
   }
 }
