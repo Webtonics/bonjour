@@ -1,9 +1,8 @@
 import 'package:bonjour/models/user.dart' as model;
 import 'package:bonjour/providers/user_provider.dart';
-import 'package:bonjour/resources/authentication/auth_method.dart';
 import 'package:bonjour/utils/colors.dart';
+import 'package:bonjour/views/appscreens/add_post.dart';
 import 'package:bonjour/views/profile.dart';
-import 'package:bonjour/views/success.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -60,15 +59,11 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
           Center(
             child: Text("Search"),
           ),
-          Center(
-            child: Text("Upload"),
-          ),
+          AddPostScreen(),
           Center(
             child: Text("Favorites"),
           ),
-          Center(
-            child: Text("profile"),
-          ),
+          ProfileScreen(),
         ],
       ),
 
