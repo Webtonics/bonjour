@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:bonjour/resources/authentication/auth_exception.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:uuid/uuid.dart';
 
 class StorageMethods {
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -11,9 +11,14 @@ class StorageMethods {
   //add image to firebase storage
   Future<String> uploadImageToStorage(
       String childName, bool isPost, Uint8List profilePicture) async {
-    Reference ref = _storage.ref().child(childName).child(_auth.currentUser!.uid
-        .toString()
-        .toString()); // this is to get where to put data, child name is different folders eg. app/profile/uid/image.png
+    Reference ref = _storage.ref().child(childName).child(_auth.currentUser!
+        .uid); // this is to get where to put data, child name is different folders eg. app/profile/uid/image.png
+
+    if (isPost) {
+      String id = Uuid().v1();
+      ref = ref.child(id);
+    }
+
     UploadTask uploadTask = ref.putData(profilePicture); //upload the data
 
     TaskSnapshot snap = await uploadTask; //get the snapshot

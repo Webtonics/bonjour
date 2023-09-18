@@ -5,8 +5,8 @@
 
 // class Posts {
 //   final String description;
-//   final User user;
-//   final Uint8List image;
+//   // final String user;
+//   final String image;
 
 //   Posts({
 //     required this.description,

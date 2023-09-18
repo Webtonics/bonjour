@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:bonjour/providers/user_provider.dart';
+import 'package:bonjour/resources/firestore_methods.dart';
 import 'package:bonjour/utils/colors.dart';
+import 'package:bonjour/utils/snackbar.dart';
 import 'package:bonjour/utils/uploader/image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,6 +20,55 @@ class AddPostScreen extends StatefulWidget {
 
 class _AddPostScreenState extends State<AddPostScreen> {
   Uint8List? _file;
+  TextEditingController _descriptionController = TextEditingController();
+
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    _descriptionController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  void postImage(
+    String uid,
+    String username,
+    String profileImage,
+  ) async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      String res = await FirestoreMethods().uploadPost(
+          profileImage, _descriptionController.text, _file!, uid, username);
+
+      if (res == "Success") {
+        _isLoading = false;
+        showSnackBar("Post Published sucessfully", context);
+        clearImage;
+      } else {
+        showSnackBar(res, context);
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      e.toString();
+    }
+  }
+
+  void clearImage() {
+    setState(() {
+      _file = null;
+    });
+  }
+
   selectImage(BuildContext context) {
     return showDialog(
         context: context,
@@ -74,7 +125,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
             appBar: AppBar(
               backgroundColor: mobileBackgroundColor,
               leading: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  clearImage();
+                },
                 icon: const Icon(
                   Icons.arrow_back,
                   size: 25,
@@ -84,7 +137,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
               title: const Text("Post to"),
               actions: [
                 TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      postImage(user.uid, user.username, user.photoUrl);
+                    },
                     child: const Text(
                       "Post",
                       style: TextStyle(
@@ -97,6 +152,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
             ),
             body: Column(
               children: [
+                _isLoading
+                    ? const LinearProgressIndicator(
+                        color: Colors.white,
+                      )
+                    : const Padding(
+                        padding: EdgeInsets.only(top: 0),
+                      ),
+                const Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,9 +168,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       backgroundImage: NetworkImage(user.photoUrl),
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      child: const TextField(
-                        decoration: InputDecoration(
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      child: TextField(
+                        controller: _descriptionController,
+                        decoration: const InputDecoration(
                           hintText: "Write a caption",
                           border: InputBorder.none,
                         ),
