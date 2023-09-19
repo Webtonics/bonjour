@@ -1,5 +1,6 @@
 import 'package:bonjour/models/user.dart';
 import 'package:bonjour/providers/user_provider.dart';
+import 'package:bonjour/resources/authentication/auth_method.dart';
 import 'package:bonjour/widget/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Profile"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                AuthMethods().logOutUser();
+              },
+              icon: const Icon(Icons.logout))
+        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

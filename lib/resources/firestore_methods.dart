@@ -42,10 +42,12 @@ class FirestoreMethods {
     return res;
   }
 
-  Future<Post> getallPosts() async {
-    String user = _auth.currentUser!.uid;
-    DocumentSnapshot documentSnapshot =
-        await _firestore.collection('posts').doc(user).get();
-    return Post.fromSnap(documentSnapshot);
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getallPosts() async {
+    Stream<QuerySnapshot<Map<String, dynamic>>> documentSnapshot =
+        _firestore.collection('posts').snapshots();
+    // DocumentSnapshot documentSnapshot =   _firestore.collection('posts').snapshots();
+
+    // return Post.fromSnap(documentSnapshot);
+    return documentSnapshot;
   }
 }
