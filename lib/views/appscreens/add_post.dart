@@ -49,9 +49,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
           profileImage, _descriptionController.text, _file!, uid, username);
 
       if (res == "Success") {
-        _isLoading = false;
+        setState(() {
+          _isLoading = false;
+        });
         showSnackBar("Post Published sucessfully", context);
-        clearImage;
+        clearImage();
       } else {
         showSnackBar(res, context);
       }

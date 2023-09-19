@@ -2,6 +2,7 @@ import 'package:bonjour/models/user.dart' as model;
 import 'package:bonjour/providers/user_provider.dart';
 import 'package:bonjour/utils/colors.dart';
 import 'package:bonjour/views/appscreens/add_post.dart';
+import 'package:bonjour/views/appscreens/feed_screen.dart';
 import 'package:bonjour/views/profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -53,9 +54,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
         },
         physics: const NeverScrollableScrollPhysics(),
         children: const [
-          Center(
-            child: Text("Feed"),
-          ),
+          FeedScreen(),
           Center(
             child: Text("Search"),
           ),
