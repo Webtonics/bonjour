@@ -1,12 +1,15 @@
-// import 'package:flutter/foundation.dart';
-// import 'package:provider/provider.dart';
-// class PostProvider with ChangeNotifier {
-  
-//   Post post = ;
-//   _postService = 
+import 'package:bonjour/resources/firestore_methods.dart';
+import 'package:flutter/material.dart';
+import '../models/post.dart';
 
-//   //get posts 
-//   //  List<Map<String, dynamic>> getPost()async {
+class PostProvider with ChangeNotifier {
+  Post? _post;
+  Post get getPost => _post!;
 
-//   // }
-// }
+  Future<void> refreshPost() async {
+    Post post = await FirestoreMethods().getallPosts();
+
+    _post = post;
+    notifyListeners();
+  }
+}

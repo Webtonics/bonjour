@@ -1,3 +1,4 @@
+import 'package:bonjour/providers/post_provider.dart';
 import 'package:bonjour/providers/user_provider.dart';
 import 'package:bonjour/responsive/mobilescreen_layout.dart';
 import 'package:bonjour/responsive/responsive_layout.dart';
@@ -26,13 +27,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => UserProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(
+          create: (_) => PostProvider(),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Bonjour',
         theme: ThemeData.dark().copyWith(
           scaffoldBackgroundColor: mobileBackgroundColor,
+          iconTheme: const IconThemeData(size: 20, color: primaryColor),
+          // iconButtonTheme:
+          //     IconButtonThemeData(style: IconButton.styleFrom(iconSize: 15))
         ),
+
         //Stream builder to track user state
         home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
