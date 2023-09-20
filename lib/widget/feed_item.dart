@@ -1,5 +1,6 @@
 import 'package:bonjour/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../views/appscreens/widgetscrren/comment.dart';
 
@@ -136,8 +137,7 @@ class _FeedItemState extends State<FeedItem> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  // widget.snap['likes'].toString(),
-                  "465 likes",
+                  "${widget.snap['likes'].length}",
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge!
@@ -156,11 +156,6 @@ class _FeedItemState extends State<FeedItem> {
                       ),
                       TextSpan(text: "  ${widget.snap['description']}")
                     ])),
-                // const Text(
-                //   "Description of the post 😂😂",
-                //   maxLines: 2,
-                //   overflow: TextOverflow.clip,
-                // ),
                 TextButton(
                     onPressed: () {
                       showModalBottomSheet(
@@ -168,10 +163,19 @@ class _FeedItemState extends State<FeedItem> {
                           isScrollControlled: false,
                           builder: (_) => const CommentScreen());
                     },
-                    child: const Text("View all comment.."))
+                    child: const Text("View all comment..")),
+                //Date
+                Container(
+                  padding: EdgeInsets.symmetric(),
+                  child: Text(
+                      //Getting date format from the db
+                      DateFormat.yMMMd()
+                          .format(widget.snap['datePublished'].toDate()) //
+                      ),
+                ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
