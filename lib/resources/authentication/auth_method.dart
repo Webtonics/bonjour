@@ -103,19 +103,6 @@ class AuthMethods {
     return result;
   }
 
-  //get Current user ID
-  // Future<String?> getUser() async {
-  //   String userID = await _auth.currentUser!.uid;
-  //   return userID;
-  //   // return _auth.currentUser?.uid;
-  // }
-
-  // getUseriD() {
-  //   String userID = _auth.currentUser!.uid;
-  //   return userID;
-  //   // return _auth.currentUser?.uid;
-  // }
-
   //Logout user
   Future<void> logOutUser() async {
     await _auth.signOut();

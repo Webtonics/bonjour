@@ -26,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _passwordController = TextEditingController();
 
   late bool _obsecure;
+  bool _isloading = false;
   @override
   void initState() {
     _emailController = TextEditingController();
@@ -49,22 +50,32 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void signUserIn() async {
     try {
+      setState(() {
+        _isloading = true;
+      });
       String result = await AuthMethods()
           .signInUser(_emailController.text, _passwordController.text);
 
       if (result == "Success") {
-        // ignore: use_build_context_synchronously
         showSnackBar(result, context);
-        // ignore: use_build_context_synchronously
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => const ResponsiveLayout(
-              webScreenLayout: WebScreenLayout(),
-              mobileScreenLayout: MobileScreenLayout(),
-            ),
-          ),
-        );
+        if (context.mounted) {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const ResponsiveLayout(
+                  mobileScreenLayout: MobileScreenLayout(),
+                  webScreenLayout: WebScreenLayout(),
+                ),
+              ),
+              (route) => false);
+
+          setState(() {
+            _isloading = false;
+          });
+        }
       } else {
+        setState(() {
+          _isloading = false;
+        });
         showSnackBar(result, context);
       }
       // Navigator.of(context).pop();
@@ -81,6 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
           child: Container(
         width: double.infinity,
@@ -163,13 +175,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const RegisterScreen())),
                     child: Container(
-                      child: const Text(
-                        "Signup",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600),
-                      ),
+                      child: _isloading
+                          ? const CircularProgressIndicator()
+                          : const Text(
+                              "Signup",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600),
+                            ),
                     ),
                   ),
                 ],

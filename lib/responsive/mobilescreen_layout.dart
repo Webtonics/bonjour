@@ -1,112 +1,115 @@
-import 'package:bonjour/models/user.dart' as model;
-import 'package:bonjour/providers/user_provider.dart';
-import 'package:bonjour/utils/colors.dart';
-import 'package:bonjour/views/appscreens/add_post.dart';
-import 'package:bonjour/views/appscreens/feed_screen.dart';
-import 'package:bonjour/views/profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../models/user.dart';
+import '../utils/colors.dart';
+import '../views/appscreens/add_post.dart';
+import '../views/appscreens/feed_screen.dart';
+import '../views/profile.dart';
 
 class MobileScreenLayout extends StatefulWidget {
-  const MobileScreenLayout({super.key});
+  const MobileScreenLayout({Key? key}) : super(key: key);
 
   @override
   State<MobileScreenLayout> createState() => _MobileScreenLayoutState();
 }
 
 class _MobileScreenLayoutState extends State<MobileScreenLayout> {
-  int currentPage = 0;
-  late PageController pageController;
+  int _page = 0;
+  late PageController pageController; // for tabs animation
 
   @override
   void initState() {
-    pageController = PageController();
     super.initState();
+    pageController = PageController();
   }
 
   @override
   void dispose() {
-    pageController.dispose();
     super.dispose();
+    pageController.dispose();
+  }
+
+  void onPageChanged(int page) {
+    setState(() {
+      _page = page;
+    });
   }
 
   void navigationTapped(int page) {
+    //Animating Page
     pageController.jumpToPage(page);
-  }
-
-  void onpageChange(int page) {
-    page = currentPage;
   }
 
   @override
   Widget build(BuildContext context) {
-    model.User user = Provider.of<UserProvider>(context).getUser;
+    User? user = Provider.of(context).getUser;
+    final isUserLogin = user?.username ?? false;
     return Scaffold(
-      backgroundColor: mobileBackgroundColor,
-      // body: pages[currentPage],
-      body: PageView(
-        controller: pageController,
-        onPageChanged: (value) {
-          setState(() {
-            currentPage = value;
-          });
-        },
-        physics: const NeverScrollableScrollPhysics(),
-        children: const [
-          FeedScreen(),
-          Center(
-            child: Text("Search"),
-          ),
-          AddPostScreen(),
-          Center(
-            child: Text("Favorites"),
-          ),
-          ProfileScreen(),
-        ],
-      ),
-
+      body: isUserLogin == false
+          ? const Text("data")
+          : PageView(
+              controller: pageController,
+              onPageChanged: onPageChanged,
+              children: const [
+                FeedScreen(),
+                // Center(
+                //   child: Text("Feed"),
+                // ),
+                Center(
+                  child: Text("Search"),
+                ),
+                AddPostScreen(),
+                Center(
+                  child: Text("Favorites"),
+                ),
+                ProfileScreen(),
+              ],
+            ),
       bottomNavigationBar: CupertinoTabBar(
-        iconSize: 25,
-        currentIndex: currentPage,
-
         backgroundColor: mobileBackgroundColor,
-        // inactiveColor: secondaryColor,
-        // activeColor: primaryColor,
-
-        items: [
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                color: currentPage == 0 ? primaryColor : secondaryColor,
-              ),
-              label: ""),
+            icon: Icon(
+              Icons.home,
+              color: (_page == 0) ? primaryColor : secondaryColor,
+            ),
+            label: '',
+            backgroundColor: primaryColor,
+          ),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.search,
-                color: currentPage == 1 ? primaryColor : secondaryColor,
+                color: (_page == 1) ? primaryColor : secondaryColor,
               ),
-              label: ""),
+              label: '',
+              backgroundColor: primaryColor),
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.add_box_outlined,
-                color: currentPage == 2 ? primaryColor : secondaryColor,
+                Icons.add_circle,
+                color: (_page == 2) ? primaryColor : secondaryColor,
               ),
-              label: ""),
+              label: '',
+              backgroundColor: primaryColor),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.favorite,
-                color: currentPage == 3 ? primaryColor : secondaryColor,
-              ),
-              label: ""),
+            icon: Icon(
+              Icons.favorite,
+              color: (_page == 3) ? primaryColor : secondaryColor,
+            ),
+            label: '',
+            backgroundColor: primaryColor,
+          ),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.person,
-                color: currentPage == 4 ? primaryColor : secondaryColor,
-              ),
-              label: ""),
+            icon: Icon(
+              Icons.person,
+              color: (_page == 4) ? primaryColor : secondaryColor,
+            ),
+            label: '',
+            backgroundColor: primaryColor,
+          ),
         ],
         onTap: navigationTapped,
+        currentIndex: _page,
       ),
     );
   }

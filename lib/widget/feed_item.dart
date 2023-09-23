@@ -1,6 +1,7 @@
+import 'package:bonjour/resources/authentication/auth_method.dart';
 import 'package:bonjour/utils/colors.dart';
 import 'package:bonjour/widget/like_animation.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -12,27 +13,13 @@ import '../views/appscreens/widgetscrren/comment.dart';
 class FeedItem extends StatefulWidget {
   const FeedItem({
     super.key,
-    required this.image,
-    required this.userProfileImage,
-    required this.username,
     required this.menuAction,
-    // required this.favoriteAction,
-    required this.commentAction,
-    required this.shareAction,
-    required this.saveAction,
     required this.snap,
-    // required this.isliked,
   });
 
-  final String image;
-  final String userProfileImage;
-  final String username;
   final snap;
   final VoidCallback menuAction;
-  // final VoidCallback favoriteAction;
-  final VoidCallback commentAction;
-  final VoidCallback shareAction;
-  final VoidCallback saveAction;
+
   // final bool isliked;
   @override
   State<FeedItem> createState() => _FeedItemState();
@@ -40,6 +27,7 @@ class FeedItem extends StatefulWidget {
 
 class _FeedItemState extends State<FeedItem> {
   bool islikedAnimating = false;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -49,7 +37,7 @@ class _FeedItemState extends State<FeedItem> {
 
   @override
   Widget build(BuildContext context) {
-    User user = Provider.of<UserProvider>(context).getUser;
+    // User user = Provider.of<UserProvider>(context).getUser;
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: Column(
@@ -137,7 +125,8 @@ class _FeedItemState extends State<FeedItem> {
                   //favourite
 
                   LikeAnimation(
-                    isAnimating: widget.snap['likes'].contains(user.uid),
+                    isAnimating:
+                        widget.snap['likes'].contains(_auth.currentUser!.uid),
                     smallLike: true,
                     child: IconButton(
                       icon: const Icon(Icons.favorite),
@@ -146,19 +135,14 @@ class _FeedItemState extends State<FeedItem> {
                   ),
 
                   //comment
-                  IconButton(
-                      onPressed: widget.commentAction,
-                      icon: const Icon(Icons.comment)),
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.comment)),
                   //Share
-                  IconButton(
-                      onPressed: widget.shareAction,
-                      icon: const Icon(Icons.share)),
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
                 ],
               ),
 
               //Save icon
-              IconButton(
-                  onPressed: widget.saveAction, icon: const Icon(Icons.save))
+              IconButton(onPressed: () {}, icon: const Icon(Icons.save))
             ],
           ),
 

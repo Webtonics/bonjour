@@ -27,49 +27,48 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(
-          create: (_) => PostProvider(),
-        ),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Bonjour',
-        theme: ThemeData.dark().copyWith(
-          scaffoldBackgroundColor: mobileBackgroundColor,
-          iconTheme: const IconThemeData(size: 20, color: primaryColor),
-          // iconButtonTheme:
-          //     IconButtonThemeData(style: IconButton.styleFrom(iconSize: 15))
-        ),
+        providers: [
+          ChangeNotifierProvider(create: (_) => UserProvider()),
+          // ChangeNotifierProvider(
+          //   create: (_) => PostProvider(),
+          // ),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Bonjour',
+          theme: ThemeData.dark().copyWith(
+            scaffoldBackgroundColor: mobileBackgroundColor,
+            iconTheme: const IconThemeData(size: 20, color: primaryColor),
+            // iconButtonTheme:
+            //     IconButtonThemeData(style: IconButton.styleFrom(iconSize: 15))
+          ),
 
-        //Stream builder to track user state
-        home: StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.active) {
-              if (snapshot.hasData) {
-                return const ResponsiveLayout(
-                  webScreenLayout: WebScreenLayout(),
-                  mobileScreenLayout: MobileScreenLayout(),
-                );
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Text("${snapshot.error}"),
+          // Stream builder to track user state
+          home: StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.active) {
+                if (snapshot.hasData) {
+                  return const ResponsiveLayout(
+                    webScreenLayout: WebScreenLayout(),
+                    mobileScreenLayout: MobileScreenLayout(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text("${snapshot.error}"),
+                  );
+                }
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: primaryColor,
+                  ),
                 );
               }
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: primaryColor,
-                ),
-              );
-            }
-            return const LoginScreen();
-          },
-        ),
-      ),
-    );
+              return const LoginScreen();
+            },
+          ),
+        ));
   }
 }
