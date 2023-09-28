@@ -49,48 +49,53 @@ class _FeedItemState extends State<FeedItem> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.35,
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              // border: Border.all(color: Colors.white),
-              color: mobileBackgroundColor,
-              // color: Colors.white,
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: NetworkImage(widget.snap['postUrl']),
+          Stack(children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.35,
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                // border: Border.all(color: Colors.white),
+                color: mobileBackgroundColor,
+                // color: Colors.white,
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(widget.snap['postUrl']),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      //image
+                      CircleAvatar(
+                        backgroundImage:
+                            NetworkImage(widget.snap['profileImage']),
+                        radius: 20,
+                      ),
+
+                      //username
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: Text(widget.snap['username']),
+                      ),
+                    ],
+                  ),
+                  //menu
+                  IconButton(
+                      onPressed: widget.menuAction,
+                      icon: const Icon(Icons.more_vert))
+                ],
               ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    //image
-                    CircleAvatar(
-                      backgroundImage:
-                          NetworkImage(widget.snap['profileImage']),
-                      radius: 20,
-                    ),
-
-                    //username
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: Text(widget.snap['username']),
-                    ),
-                  ],
-                ),
-                //menu
-                IconButton(
-                    onPressed: widget.menuAction,
-                    icon: const Icon(Icons.more_vert))
-              ],
-            ),
-          ),
+            const Opacity(opacity: 0.8
+                // child: LikeAnimation,
+                )
+          ]),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -166,7 +171,7 @@ class _FeedItemState extends State<FeedItem> {
                     child: const Text("View all comment..")),
                 //Date
                 Container(
-                  padding: EdgeInsets.symmetric(),
+                  padding: const EdgeInsets.symmetric(),
                   child: Text(
                       //Getting date format from the db
                       DateFormat.yMMMd()
