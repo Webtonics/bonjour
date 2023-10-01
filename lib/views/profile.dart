@@ -22,7 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    User user = Provider.of<UserProvider>(context).getUser;
+    User? user = Provider.of<UserProvider>(context).getUser;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Profile"),
@@ -42,7 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Text("My Profile"),
           ),
           CircleAvatar(
-            backgroundImage: NetworkImage(user.photoUrl),
+            backgroundImage: NetworkImage(user!.photoUrl),
             radius: 60,
           ),
           const Center(child: Text("Change your info")),

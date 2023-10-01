@@ -1,3 +1,4 @@
+import 'package:bonjour/providers/post_provider.dart';
 import 'package:bonjour/providers/user_provider.dart';
 import 'package:bonjour/utils/dimension.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +27,12 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
   addData() async {
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
+    PostProvider postProvider =
+        Provider.of<PostProvider>(context, listen: false);
     await userProvider.refreshUser();
     // await UserProvider().refreshUser();
+
+    await postProvider.refreshPost();
   }
 
   @override
