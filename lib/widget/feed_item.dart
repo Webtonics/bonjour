@@ -1,8 +1,12 @@
+import 'package:bonjour/providers/user_provider.dart';
 import 'package:bonjour/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
+import '../models/user.dart';
 import '../views/appscreens/widgetscrren/comment.dart';
+import 'like_animation.dart';
 
 class FeedItem extends StatefulWidget {
   const FeedItem({
@@ -35,67 +39,97 @@ class FeedItem extends StatefulWidget {
 
 class _FeedItemState extends State<FeedItem> {
   bool isliked = false;
-
+  bool isLikeAnimating = false;
   @override
   void initState() {
     // bool isliked = false;
     super.initState();
   }
+  // isLikeAnimating(){}
 
   @override
   Widget build(BuildContext context) {
+    User? user = Provider.of<UserProvider>(context).getUser;
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Stack(children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.35,
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                // border: Border.all(color: Colors.white),
-                color: mobileBackgroundColor,
-                // color: Colors.white,
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(widget.snap['postUrl']),
+          GestureDetector(
+            onDoubleTap: () {
+              setState(() {
+                isLikeAnimating = true;
+              });
+            },
+            child: Stack(alignment: Alignment.center, children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.35,
+                width: double.infinity,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  // border: Border.all(color: Colors.white),
+                  color: mobileBackgroundColor,
+                  // color: Colors.white,
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(widget.snap['postUrl']),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        //image
+                        CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(widget.snap['profileImage']),
+                          radius: 20,
+                        ),
+
+                        //username
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Text(widget.snap['username']),
+                        ),
+                      ],
+                    ),
+                    //menu
+                    IconButton(
+                        onPressed: widget.menuAction,
+                        icon: const Icon(Icons.more_vert))
+                  ],
                 ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      //image
-                      CircleAvatar(
-                        backgroundImage:
-                            NetworkImage(widget.snap['profileImage']),
-                        radius: 20,
-                      ),
+              AnimatedOpacity(
+                duration: const Duration(milliseconds: 200),
+                opacity: isLikeAnimating ? 1 : 0,
+                child: LikeAnimation(
+                    onEnd: () {
+                      setState(() {
+                        isLikeAnimating = false;
+                      });
+                    },
+                    isAnimating: isLikeAnimating,
+                    duration: const Duration(milliseconds: 400),
+                    child: const Icon(
+                      Icons.favorite,
+                      size: 100,
+                      color: Colors.redAccent,
+                    )),
+              )
+              // const Opacity(opacity: 0.8,
+              //     child: LikeAnimation(isAnimating: null,
+              //     child: null,),
+              // )
+            ]),
+          ),
 
-                      //username
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8),
-                        child: Text(widget.snap['username']),
-                      ),
-                    ],
-                  ),
-                  //menu
-                  IconButton(
-                      onPressed: widget.menuAction,
-                      icon: const Icon(Icons.more_vert))
-                ],
-              ),
-            ),
-            const Opacity(opacity: 0.8
-                // child: LikeAnimation,
-                )
-          ]),
+          //Comment, Like sections
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -104,20 +138,24 @@ class _FeedItemState extends State<FeedItem> {
                 children: [
                   //favourite
 
-                  IconButton(
-                      onPressed: () {
-                        setState(() {
-                          isliked = !isliked;
-                        });
-                      },
-                      icon: isliked
-                          ? const Icon(
-                              Icons.favorite,
-                              color: Colors.red,
-                            )
-                          : const Icon(
-                              Icons.favorite,
-                            )),
+                  LikeAnimation(
+                    smallLike: true,
+                    isAnimating: widget.snap['likes'].contains(user!.uid),
+                    child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            isliked = !isliked;
+                          });
+                        },
+                        icon: isliked
+                            ? const Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                              )
+                            : const Icon(
+                                Icons.favorite,
+                              )),
+                  ),
 
                   //comment
                   IconButton(

@@ -1,47 +1,65 @@
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
-// class LikeAnimation extends StatefulWidget {
-//   const LikeAnimation(
-//       {super.key,
-//       required this.child,
-//       required this.isAnimating,
-//       required this.duration,
-//       this.onEnd});
-//   final Widget child;
-//   final bool isAnimating;
-//   final Duration duration = const Duration(milliseconds: 150);
-//   final bool smallLike = false;
-//   final VoidCallback? onEnd;
+class LikeAnimation extends StatefulWidget {
+  const LikeAnimation(
+      {super.key,
+      required this.child,
+      required this.isAnimating,
+      this.duration = const Duration(milliseconds: 150),
+      this.onEnd,
+      this.smallLike = false});
+  final Widget child;
+  final bool isAnimating;
+  final Duration duration;
+  final bool smallLike;
+  final VoidCallback? onEnd;
 
-//   @override
-//   State<LikeAnimation> createState() => _LikeAnimationState();
-// }
+  @override
+  State<LikeAnimation> createState() => _LikeAnimationState();
+}
 
-// class _LikeAnimationState extends State<LikeAnimation>
-//     with SingleTickerProviderStateMixin {
-//   late AnimationController controller;
+class _LikeAnimationState extends State<LikeAnimation>
+    with SingleTickerProviderStateMixin {
+  late AnimationController controller;
+  late Animation<double> scale;
+  @override
+  void initState() {
+    controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: widget.duration.inMilliseconds ~/ 2),
+    );
+    scale = Tween<double>(begin: 1, end: 1.2).animate(controller);
+    super.initState();
+  }
 
-//   @override
-//   void initState() {
-//     controller = AnimationController(
-//       vsync: this,
-//       duration: Duration(milliseconds: widget.duration.inMilliseconds ~/ 2),
-//     );
-//     scale = Tween<double>(begin: 1, end: 1.2).animate(controller);
-//     super.initState();
-//   }
+  @override
+  void didUpdateWidget(covariant LikeAnimation oldWidget) {
+    //current widget is replaced by another widget
+    super.didUpdateWidget(oldWidget);
 
-//   @override
-//   void didUpdateWidget(covariant LikeAnimation oldWidget) {
-//     super.didUpdateWidget(oldWidget);
+    if (widget.isAnimating != oldWidget.isAnimating) {
+      // await co
+      startAnimation();
+    }
+  }
 
-//     if (widget.isAnimating != oldWidget.isAnimating) {
-//       await co
-//     } else {}
-//   }
+  startAnimation() async {
+    if (widget.isAnimating || widget.smallLike) {
+      await controller.forward();
+      await controller.reverse();
+      await Future.delayed(const Duration(milliseconds: 200));
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container();
-//   }
-// }
+      if (widget.onEnd != null) {
+        widget.onEnd!();
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaleTransition(
+      scale: scale,
+      child: widget.child,
+    );
+  }
+}
