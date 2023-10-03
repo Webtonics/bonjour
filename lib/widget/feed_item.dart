@@ -1,4 +1,5 @@
 import 'package:bonjour/providers/user_provider.dart';
+import 'package:bonjour/resources/firestore_methods.dart';
 import 'package:bonjour/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -56,10 +57,13 @@ class _FeedItemState extends State<FeedItem> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GestureDetector(
-            onDoubleTap: () {
+            onDoubleTap: () async {
               setState(() {
                 isLikeAnimating = true;
+                isliked = !isliked;
               });
+              FirestoreMethods().likePost(user!.uid,
+                  widget.snap['postId'].toString(), widget.snap['likes']);
             },
             child: Stack(alignment: Alignment.center, children: [
               Container(
@@ -122,10 +126,6 @@ class _FeedItemState extends State<FeedItem> {
                       color: Colors.redAccent,
                     )),
               )
-              // const Opacity(opacity: 0.8,
-              //     child: LikeAnimation(isAnimating: null,
-              //     child: null,),
-              // )
             ]),
           ),
 
@@ -142,10 +142,14 @@ class _FeedItemState extends State<FeedItem> {
                     smallLike: true,
                     isAnimating: widget.snap['likes'].contains(user!.uid),
                     child: IconButton(
-                        onPressed: () {
+                        onPressed: () async {
                           setState(() {
                             isliked = !isliked;
                           });
+                          FirestoreMethods().likePost(
+                              user.uid,
+                              widget.snap['postId'].toString(),
+                              widget.snap['likes']);
                         },
                         icon: isliked
                             ? const Icon(

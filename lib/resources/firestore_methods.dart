@@ -50,4 +50,22 @@ class FirestoreMethods {
     // return Post.fromSnap(documentSnapshot);
     return documentSnapshot;
   }
+
+  Future<void> likePost(String uid, String postID, List likes) async {
+    try {
+      if (likes.contains(uid)) {
+        // remove like
+        _firestore.collection('posts').doc(postID).update({
+          'likes': FieldValue.arrayRemove([uid])
+        });
+      } else {
+        // add like
+        _firestore.collection("posts").doc(postID).update({
+          'likes': FieldValue.arrayUnion(([uid]))
+        });
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }
