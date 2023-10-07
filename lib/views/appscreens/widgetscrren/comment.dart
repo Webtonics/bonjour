@@ -1,4 +1,5 @@
 import 'package:bonjour/utils/colors.dart';
+import 'package:bonjour/widget/comment_body.dart';
 import 'package:bonjour/widget/textfield.dart';
 import 'package:flutter/material.dart';
 
@@ -39,23 +40,37 @@ class _CommentScreenState extends State<CommentScreen> {
         ),
         child: Column(
           children: [
+            // Text("data"),
             Expanded(
               child: ListView.builder(
-                  itemCount: 30,
+                  itemCount: 20,
                   itemBuilder: ((context, index) {
-                    ListTile(
-                      leading: const CircleAvatar(
-                          backgroundImage: NetworkImage("url")),
-                      title: const Text("Mark rubbino"),
-                      subtitle: const Text("That is a beutiful artpiece"),
-                      trailing: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isFav = !isFav;
-                            });
-                          },
-                          icon: const Icon(Icons.favorite)),
-                    );
+                    return const Expanded(child: CommentCard());
+                    // return ListTile(
+                    //   leading: const CircleAvatar(
+                    //     // backgroundImage: NetworkImage("url")
+                    //     radius: 15,
+                    //     backgroundColor: Colors.deepOrange,
+                    //   ),
+                    //   title: const Text(
+                    //     "Mark rubbino",
+                    //     style: TextStyle(
+                    //         fontSize: 15, fontWeight: FontWeight.bold),
+                    //   ),
+                    //   subtitle: const Text(
+                    //     "That is a beutiful artpiece, That is a beutiful artThat is a beutiful artpieceThat is a beutiful artpieceThat is a beutiful artpieceThat is a beutiful artpiece",
+                    //     maxLines: 3,
+                    //     style: TextStyle(
+                    //         fontSize: 12, fontWeight: FontWeight.w600),
+                    //   ),
+                    //   trailing: IconButton(
+                    //       onPressed: () {
+                    //         setState(() {
+                    //           isFav = !isFav;
+                    //         });
+                    //       },
+                    //       icon: const Icon(Icons.favorite)),
+                    // );
                   })),
             ),
           ],
