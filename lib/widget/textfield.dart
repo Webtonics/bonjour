@@ -34,10 +34,8 @@ class MyTextField extends StatelessWidget {
         label: Text(label),
         labelStyle: const TextStyle(),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide:
-              const BorderSide(color: Colors.red, style: BorderStyle.none),
-        ),
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none),
       ),
       keyboardType: keyboardtype,
     );

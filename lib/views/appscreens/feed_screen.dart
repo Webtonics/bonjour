@@ -1,5 +1,6 @@
 import 'package:bonjour/models/user.dart';
 import 'package:bonjour/utils/colors.dart';
+import 'package:bonjour/views/appscreens/widgetscrren/comment.dart';
 import 'package:bonjour/views/profile.dart';
 import 'package:bonjour/widget/feed_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -87,22 +88,18 @@ class _FeedScreenState extends State<FeedScreen> {
                                                               .symmetric(
                                                           vertical: 16),
                                                       shrinkWrap: true,
-                                                      children: [
-                                                        "Delete",
-                                                      ]
+                                                      children: ["Delete"]
                                                           .map((e) => InkWell(
-                                                                child:
-                                                                    Container(
-                                                                  padding: const EdgeInsets
-                                                                          .symmetric(
-                                                                      vertical:
-                                                                          12,
-                                                                      horizontal:
-                                                                          16),
                                                                   child:
-                                                                      Text(e),
-                                                                ),
-                                                              ))
+                                                                      Container(
+                                                                padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical:
+                                                                        12,
+                                                                    horizontal:
+                                                                        16),
+                                                                child: Text(e),
+                                                              )))
                                                           .toList()),
                                                 );
                                               });
@@ -113,7 +110,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                           Navigator.of(context).push(
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      const ProfileScreen()));
+                                                      const CommentScreen()));
                                         },
                                         // favoriteAction: () {
                                         //   setState(() {
