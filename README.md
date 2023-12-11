@@ -47,7 +47,10 @@
     - Download and place the `google-services.json` file in the `android/app` directory for Android or `GoogleService-Info.plist` in the `ios/Runner` directory for iOS.
 
 5. **Run the application:**
-    flutter run on the terminal
+    ```bash
+    flutter run
+    ```
+    on the terminal of the app directory.
     
     The app will be launched on your connected device or emulator.
 
